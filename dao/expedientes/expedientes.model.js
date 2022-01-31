@@ -2,14 +2,14 @@ const res = require("express/lib/response");
 const getDb = require("../db");
 let db = null;
 
-class Pacientes {
+class Expedientes {
   constructor() {
     getDb()
       .then((database) => {
         db = database;
         if (process.env.MIGRATE === "true") {
           const createStatement =
-            "CREATE TABLE IF NOT EXISTS pacientes (id INTEGER PRIMARY KEY AUTOINCREMENT, identidad TEXT, nombre TEXT,  apellidos TEXT, email TEXT, telefono TEXT)";
+            "CREATE TABLE IF NOT EXISTS expedientes (id INTEGER PRIMARY KEY AUTOINCREMENT, identidad TEXT, fecha TEXT, descripcion TEXT, observacion TEXT, registros TEXT, ultimaActualizacion TEXT);";
           db.run(createStatement);
         }
       })
@@ -18,11 +18,11 @@ class Pacientes {
       });
   }
 
-  new(nombres, apellidos, identidad, telefono, correo) {
+  new (identidad, fecha, descripcion, observacion, registros, ultimaActualizacion) {
     return new Promise((accept, reject) => {
       db.run(
-        "INSERT INTO pacientes (identidad, nombre, apellidos, email, telefono) VALUES (?, ?, ?, ?, ?);",
-        [identidad, nombres, apellidos, telefono, correo],
+        "INSERT INTO expedientes (identidad, fecha, descripcion, observacion, registros, ultimaActualizacion) VALUES (?, ?, ?, ?, ?, ?);",
+        [identidad, fecha, descripcion, observacion, registros, ultimaActualizacion],
         (err, rslt) => {
           if (err) {
             console.error(err);
@@ -36,7 +36,7 @@ class Pacientes {
 
   getAll() {
     return new Promise((accept, reject) => {
-      db.all("SELECT * from pacientes;", (err, rows) => {
+      db.all("SELECT * from expedientes;", (err, rows) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -49,7 +49,7 @@ class Pacientes {
 
   getById(id) {
     return new Promise((accept, reject) => {
-      db.get("SELECT * from pacientes where id=?;", [id], (err, rows) => {
+      db.get("SELECT * from expedientes where id=?;", [id], (err, rows) => {
         if (err) {
           console.error(err);
           reject(err);
@@ -60,13 +60,13 @@ class Pacientes {
     });
   }
 
-  updateOne(id, nombres, apellidos, identidad, telefono, correo) {
+  updateOne(id, identidad, fecha, descripcion, observacion, registros, ultimaActualizacion) {
     return new Promise((accept, reject) => {
       const sqlUpdate =
-        "UPDATE pacientes set nombre = ?, apellidos = ?, telefono = ?, identidad = ?, email = ?, where id = ?;";
+        "UPDATE expedientes set identidad = ?, fecha = ?, descripcion = ?, observacion = ?, registros = ?, ultimaActualizacion = ? where id = ?;";
       db.run(
         sqlUpdate,
-        [nombres, apellidos, telefono, identidad, correo, id],
+        [identidad, fecha, descripcion, observacion, registros, ultimaActualizacion, id],
         function (err) {
           if (err) {
             reject(err);
@@ -80,7 +80,7 @@ class Pacientes {
 
   deleteOne(id) {
     return new Promise((accept, reject) => {
-      const sqlDelete = "DELETE FROM pacientes where id = ?;";
+      const sqlDelete = "DELETE FROM expedientes where id = ?;";
       db.run(sqlDelete, [id], function (err) {
         if (err) {
           reject(err);
@@ -92,4 +92,4 @@ class Pacientes {
   }
 }
 
-module.exports = Pacientes;
+module.exports = Expedientes;
