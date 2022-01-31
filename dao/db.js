@@ -1,13 +1,11 @@
 const sqlite3 = require('sqlite3');
-const path = require('path');
-const dbFile = path.resolve(__dirname, `${process.env.DB_FILENAME}.sqlite3`);
 let db = null;
 
 //Declaracion de funcion
 const initDB = () => {
   return new Promise((accept, reject) => {
     let database = new sqlite3.Database(//"../data/medexp.sqlite3" Ruta en duro
-    dbFile, (err) => { //Ruta variable
+    `./data/${process.env.DB_FILENAME}.sqlite3`, (err) => { //Ruta variable
       if (err) {
         console.error(err);
         reject(err);
@@ -37,4 +35,4 @@ const singletonGetDBnoPromise = () => {
   return db;
 };
 
-module.exports = singletonGetDB();
+module.exports = singletonGetDB;
