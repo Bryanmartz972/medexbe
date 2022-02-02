@@ -12,7 +12,7 @@ const verifyApiHeaderToken = (req, res, next) => {
 }
 
 const sendUnauthorized = (res) => {
-  res.status(401).json({"error":"recurso no autorizado!"})
+  res.status(401).json({"error":"Recurso no autorizado!"})
 }
 
 module.exports = {
