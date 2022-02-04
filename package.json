@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --verbose --setupFiles dotenv/config"
+    "test": "jest --verbose --setupFiles dotenv/config --verbose"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
