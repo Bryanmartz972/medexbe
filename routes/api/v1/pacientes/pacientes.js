@@ -7,7 +7,7 @@ const pacienteModel = new Pacientes();
 router.get("/", (req, res) => {
   res.status(200).json({
     endpoint: "Pacientes",
-    updates: new Date(2022, 0, 19, 18, 41, 0)
+    updates: new Date(2022, 0, 19, 18, 41, 0),
   });
 }); //GET /
 
@@ -24,7 +24,7 @@ router.get("/all", async (req, res) => {
 router.get("/byid/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const row = await pacienteModel.getById(parseInt(id));
+    const row = await pacienteModel.getById(id);
     res.status(200).json({ status: "ok", pacientes: row });
   } catch (ex) {
     console.log(ex);
@@ -55,26 +55,33 @@ router.post("/new", async (req, res) => {
   }
 }); //POST /new
 
-router.put('/update/:id', async (req, res) => {
+router.put("/update/:id", async (req, res) => {
   try {
     const { nombres, apellidos, identidad, email, telefono } = req.body;
     const { id } = req.params;
-    const result = await pacienteModel.updateOne(id, nombres, apellidos, identidad, email, telefono);
-    res.status(200).json({status: 'ok', result})
+    const result = await pacienteModel.updateOne(
+      id,
+      nombres,
+      apellidos,
+      identidad,
+      email,
+      telefono
+    );
+    res.status(200).json({ status: "ok", result });
   } catch (error) {
     console.error(error);
-    res.status(500).json({status: 'failed'})
+    res.status(500).json({ status: "failed" });
   }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pacienteModel.deleteOne(id);
-    res.status(200).json({status: 'ok', result})
+    res.status(200).json({ status: "ok", result });
   } catch (error) {
     console.error(error);
-    res.status(500).json({status: 'failed'})
+    res.status(500).json({ status: "failed" });
   }
 });
 
