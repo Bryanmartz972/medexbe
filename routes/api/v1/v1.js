@@ -6,7 +6,7 @@ const expedientesRoutes = require("./expedientes/expedientes");
 
 //Rutas
 //Middlewares
-router.use("/pacientes", verifyApiHeaderToken , pacientesRoutes);
-router.use("/expedientes", expedientesRoutes);
+router.use("/pacientes", verifyApiHeaderToken, pacientesRoutes);
+router.use("/expedientes", verifyApiHeaderToken, expedientesRoutes);
 
 module.exports = router;

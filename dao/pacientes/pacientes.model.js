@@ -1,4 +1,4 @@
-const ObjectId = require('../mongodb').ObjectId;
+const ObjectId = require('mongodb').ObjectId;
 const getDb = require("../mongodb");
 let db = null;
 
@@ -27,21 +27,18 @@ class Pacientes {
       telefono,
       correo
     };
-    const rslt = await this.collection.insertOne(newPaciente);
-    return rslt;
+    return await this.collection.insertOne(newPaciente);
   }
 
   async getAll() {
     const cursor = this.collection.find({});
-    const documents = await cursor.toArray();
-    return documents;
+    return await cursor.toArray();
   }
 
   async getById(id) {
     const _id = new ObjectId(id);
     const filter = {_id};
-    const myDocument = await this.collection.findOne(filter);
-    return myDocument;
+    return await this.collection.findOne(filter);
   }
 
   async updateOne(id, nombres, apellidos, identidad, telefono, correo) {
@@ -60,7 +57,9 @@ class Pacientes {
   }
 
   async deleteOne(id) {
-    
+    const _id = new ObjectId(id);
+    const filter = {_id};
+    return await this.collection.deleteOne(filter);
   }
 }
 
