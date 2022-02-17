@@ -41,6 +41,16 @@ class Pacientes {
     return await this.collection.findOne(filter);
   }
 
+  async getFaceted(page, items, filter = {}){
+    const cursor = this.collection.find({});
+    const totalItems = await cursor.count();
+    cursor.skip((page - 1) * items);
+    cursor.limit(items);
+
+    const rslt = await cursor.toArray();
+    return {totalItems, page, items, totalPages: (Math.ceil(totalItems/items)), rslt}; 
+  }
+
   async updateOne(id, nombres, apellidos, identidad, telefono, correo) {
     const filter = { _id: new ObjectId(id)};
     //UPDATE PACIENTES SET campo=valor, campo=valor where id = id;
