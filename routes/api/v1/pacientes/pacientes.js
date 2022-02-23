@@ -108,6 +108,30 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
+router.put("/addtag/:id", async (req, res) => {
+  try {
+    const { tag } = req.body;
+    const { id } = req.params;
+    const result = await pacienteModel.updateAddTag(id, tag);
+    res.status(200).json({ status: "ok", result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "failed" });
+  }
+});
+
+router.put("/addtagset/:id", async (req, res) => {
+  try {
+    const { tag } = req.body;
+    const { id } = req.params;
+    const result = await pacienteModel.updateAddTagSet(id, tag);
+    res.status(200).json({ status: "ok", result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "failed" });
+  }
+});
+
 router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;

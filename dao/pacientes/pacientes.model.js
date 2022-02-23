@@ -66,6 +66,26 @@ class Pacientes {
     return await this.collection.updateOne(filter, updateCmd);
   }
 
+  async updateAddTag(id, tagEntry){
+    const updateCmd = {
+      "$push": {
+        tags: tagEntry
+      }
+    }
+    const filter = { _id: new ObjectId(id) };
+    return await this.collection.updateOne(filter, updateCmd);
+  }
+
+  async updateAddTagSet(id, tagEntry){
+    const updateCmd = {
+      "$addToSet": {
+        tags: tagEntry
+      }
+    }
+    const filter = { _id: new ObjectId(id) };
+    return await this.collection.updateOne(filter, updateCmd);
+  }
+
   async deleteOne(id) {
     const _id = new ObjectId(id);
     const filter = {_id};
