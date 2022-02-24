@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
 
 router.get("/all", async (req, res) => {
   try {
+    console.log("User request", req.user)
     const rows = await pacienteModel.getAll();
     res.status(200).json({ status: "ok", pacientes: rows });
   } catch (ex) {
