@@ -3,17 +3,25 @@ const router = express.Router();
 const Usuarios = require('../../../../dao/usuarios/usuarios.model');
 const usuariosModel = new Usuarios();
 const jwt = require('jsonwebtoken');
+const { authSchema } = require ('../../../../helpers/validation_usuario');
 
 router.post("/signin", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    let rslt = usuariosModel.new(email, password)
-    //TODO: Realizar validaciones de entradas de datos, libreria joi, formValidators, validateClass
-    res.status(200).json({ status: 'success', result: rslt })
+    let rslt = await authSchema.validateAsync(req.body);
+    console.log(rslt);
+    try {
+      const { email, password } = req.body;
+      let rslt = usuariosModel.new(email, password)
+      res.status(200).json({ status: 'success', result: rslt })
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ status: 'failed' })
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ status: 'failed' })
+    console.error(error)
+    res.status(422).json({status: 'Error de validación de datos'});
   }
+    
 });
 
 router.post("/login", async (req, res) => {
