@@ -24,9 +24,11 @@ class Usuarios {
       });
   }
 
-  async new(email, password, roles = []) {
+  async new(email, password, recoveryQuestion, recoveryAnswer, roles = []) {
     const newUsuario = {
       email,
+      recoveryQuestion,
+      recoveryAnswer,
       password: await this.hashPassword(password),
       roles: [...roles, "public"],
     };
@@ -71,6 +73,22 @@ class Usuarios {
 
   async comparePassword (rawPassword, dbPassword){
     return await bcrypt.compare(rawPassword, dbPassword)
+  }
+
+  async getUserRecoveryAnswer(recoveryQuestion){
+    const filter = { recoveryQuestion };
+    const user = await this.collection.findOne(filter);
+    return user.recoveryAnswer;
+  }
+
+  async updateOne(email, password){
+    const filter = { email }
+    const updateCmd = {
+      '$set':{
+        password: await this.hashPassword(password)
+      }
+    };
+    return await this.collection.updateOne(filter, updateCmd);
   }
 }
 

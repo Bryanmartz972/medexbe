@@ -3,15 +3,15 @@ const router = express.Router();
 const Usuarios = require('../../../../dao/usuarios/usuarios.model');
 const usuariosModel = new Usuarios();
 const jwt = require('jsonwebtoken');
-const { authSchema } = require ('../../../../helpers/validation_usuario');
+const { authSchema } = require('../../../../helpers/validation_usuario');
 
 router.post("/signin", async (req, res) => {
   try {
     let rslt = await authSchema.validateAsync(req.body);
     console.log(rslt);
     try {
-      const { email, password } = req.body;
-      let rslt = usuariosModel.new(email, password)
+      const { email, password, recoveryQuestion, recoveryAnswer } = req.body;
+      let rslt = usuariosModel.new(email, password, recoveryQuestion, recoveryAnswer)
       res.status(200).json({ status: 'success', result: rslt })
     } catch (error) {
       console.error(error);
@@ -19,9 +19,9 @@ router.post("/signin", async (req, res) => {
     }
   } catch (error) {
     console.error(error)
-    res.status(422).json({status: 'Error de validación de datos'});
+    res.status(422).json({ status: 'Error de validación de datos' });
   }
-    
+
 });
 
 router.post("/login", async (req, res) => {
@@ -46,6 +46,28 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: 'failed' })
+  }
+});
+
+router.put("/recoverpassword/", async (req, res) => {
+  try {
+    const { email, recoveryQuestion, recoveryAnswer, newPassword } = req.body;
+    const userInDb = await usuariosModel.getByEmail(email);
+    if (userInDb) {
+      const answerInDb = await usuariosModel.getUserRecoveryAnswer(recoveryQuestion);
+      console.log(answerInDb, recoveryAnswer)
+      if (answerInDb == recoveryAnswer) {
+        await usuariosModel.updateOne(email, newPassword);
+        res.status(200).json({ status: "Ok", msg: "Su nueva contraseña es 123" })
+      } else {
+        res.status(406).json({ status: "failed", msg: "Datos enviados invalidos" })
+      }
+    } else {
+      res.status(404).json({ status: "failed", msg: "El usuario no fue encontrado" })
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ status: "failed" });
   }
 });
 
