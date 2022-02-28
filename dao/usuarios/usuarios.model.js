@@ -75,8 +75,8 @@ class Usuarios {
     return await bcrypt.compare(rawPassword, dbPassword)
   }
 
-  async getUserRecoveryAnswer(recoveryQuestion){
-    const filter = { recoveryQuestion };
+  async getUserRecoveryAnswer(email){
+    const filter = { email };
     const user = await this.collection.findOne(filter);
     return user.recoveryAnswer;
   }

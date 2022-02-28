@@ -51,14 +51,13 @@ router.post("/login", async (req, res) => {
 
 router.put("/recoverpassword/", async (req, res) => {
   try {
-    const { email, recoveryQuestion, recoveryAnswer, newPassword } = req.body;
+    const { email, recoveryAnswer, newPassword } = req.body;
     const userInDb = await usuariosModel.getByEmail(email);
     if (userInDb) {
-      const answerInDb = await usuariosModel.getUserRecoveryAnswer(recoveryQuestion);
-      console.log(answerInDb, recoveryAnswer)
+      const answerInDb = await usuariosModel.getUserRecoveryAnswer(email);
       if (answerInDb == recoveryAnswer) {
         await usuariosModel.updateOne(email, newPassword);
-        res.status(200).json({ status: "Ok", msg: "Su nueva contraseña es 123" })
+        res.status(200).json({ status: "Ok", msg: "Su contraseña ha sido actualizada" })
       } else {
         res.status(406).json({ status: "failed", msg: "Datos enviados invalidos" })
       }
